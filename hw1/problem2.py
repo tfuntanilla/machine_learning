@@ -60,9 +60,13 @@ for n in n_values:
     print('Accuracy=', accuracy)
     print()
 
+fig2 = plt.figure()
+ax = fig2.add_subplot(111)
 plt.plot(n_values, accuracy_scores, 'o')
+for i, j in zip(n_values, accuracy_scores):
+    ax.annotate(str(round(j, 3)), xy=(i, j))
 plt.xlabel('n')
-plt.ylabel('accuracy score')
+plt.ylabel('accuracy rate')
 plt.locator_params(axis='y', nbins=10)
 plt.locator_params(axis='x', nbins=7)
 plt.show()
