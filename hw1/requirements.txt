@@ -1,5 +1,5 @@
-copy
 matplotlib
 numpy
 pandas
-sklearn
+scikit-learn
+xlrd>=1.0.0
