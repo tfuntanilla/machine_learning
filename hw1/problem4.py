@@ -10,7 +10,7 @@ from matplotlib import pyplot as plt
 plt.style.use('seaborn')
 from math import pow
 
-df = pd.read_excel('hw1/Iris.xls')
+df = pd.read_excel('./Iris.xls')
 data = df.iloc[:, [1, 2, 3, 4]].values  # sepal length, sepal width, petal length, and petal width
 category = df.iloc[:, 5].values  # outcome
 

@@ -9,7 +9,7 @@ matplotlib.use('TkAgg')
 from matplotlib import pyplot as plt
 plt.style.use('seaborn')
 
-df = pd.read_excel('hw1/pima-indians-diabetes.xlsx')
+df = pd.read_excel('./pima-indians-diabetes.xlsx')
 no_diabetes = df.loc[df['Outcome'] == 0]
 diabetes = df.loc[df['Outcome'] == 1]
 
