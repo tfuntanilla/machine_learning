@@ -1,7 +1,13 @@
+import matplotlib
 from PIL import Image
+
+matplotlib.use('TkAgg')
+
+from matplotlib import pyplot as plt
 
 
 def train():
+    print('Starting classifier training...')
     train_image = 'family.jpg'
     train_mask = 'family.png'
 
@@ -59,11 +65,12 @@ def train():
                         skin_pixels[i][j][k] + background_pixels[i][j][k])
                 file.write(str(probability) + '\n')
     file.close()
+    print('Training done.')
 
 
 def test():
     test_image = 'portrait.jpg'
-    threshold = .20
+    threshold = .24
 
     ratio = [[[0 for k in range(256)] for j in range(256)] for i in range(256)]
 
@@ -89,6 +96,7 @@ def test():
                 result.putpixel((x, y), (0, 0, 0))
 
     result.save('result.png')
+    print('Saved classification result as result.png')
 
 
 def print_stats():
@@ -139,8 +147,25 @@ def print_stats():
     print('False negative rate = ' + str(false_negative) + '/' + str(true_skin_pixels) + ' = ' + str(fn_rate))
 
 
+def plot_images():
+    fig = plt.figure(figsize=(8, 8))
+    fig.add_subplot(1, 3, 1)
+    plt.imshow(Image.open('portrait.jpg'))
+    plt.axis('off')
+
+    fig.add_subplot(1, 3, 2)
+    plt.imshow(Image.open('portrait.png'))
+    plt.axis('off')
+
+    fig.add_subplot(1, 3, 3)
+    plt.imshow(Image.open('result.png'))
+    plt.axis('off')
+    plt.show()
+
+
 if __name__ == '__main__':
     train()
     test()
     print_stats()
+    plot_images()
     print("Done!")
