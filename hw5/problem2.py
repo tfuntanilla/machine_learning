@@ -9,39 +9,41 @@ from matplotlib import pyplot as plt
 
 plt.style.use('seaborn')
 
-# Download dataset, no need to split since train and test sets are given separately
-mnist = tf.keras.datasets.mnist
-(x_traino, y_train), (x_testo, y_test) = mnist.load_data()
+(train_images, train_labels), (test_images, test_labels) = tf.keras.datasets.mnist.load_data()
+train_images = train_images.reshape((60000, 28, 28, 1))
+test_images = test_images.reshape((10000, 28, 28, 1))
 
-# Reshape
-x_train = np.reshape(x_traino, (60000, 28 * 28))
-x_test = np.reshape(x_testo, (10000, 28 * 28))
-x_train, x_test = x_train / 255.0, x_test / 255.0
+# Normalize pixel values to be between 0 and 1
+train_images, test_images = train_images / 255.0, test_images / 255.0
 
-# Create the two-layer neural network
 model = tf.keras.models.Sequential()
-# The hidden layer has 512 node, and adopts the ReLU activation function
-# Need to also pass the input shape here
-model.add(tf.keras.layers.Dense(512, activation='relu', input_shape=(x_train.shape[1],)))
-# the output layer has 10 nodes and adopts the softmax activation function
-model.add(tf.keras.layers.Dense(10, activation='softmax'))
+model.add(tf.keras.layers.Conv2D(32, (3, 3), activation='relu', input_shape=(28, 28, 1)))
+model.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2)))
+model.add(tf.keras.layers.Conv2D(64, (3, 3), activation='relu'))
+model.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2)))
+model.add(tf.keras.layers.Conv2D(64, (3, 3), activation='relu'))
+model.add(tf.keras.layers.Flatten())  # need to flatten before adding the fully connected layers
+model.add(tf.keras.layers.Dense(units=64, activation='relu'))
+model.add(tf.keras.layers.Dense(units=64, activation='relu'))
+model.add(tf.keras.layers.Dense(units=10, activation='softmax'))
+
 # Use the cross-entropy error function - labels are integers so use sparse_categorical_crossentropy
 model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 # Run 5 epochs
-model.fit(x_train, y_train, epochs=5)
+model.fit(train_images, train_labels, epochs=5)
 
 # Check score of model
-scores = model.evaluate(x_train, y_train)
+scores = model.evaluate(train_images, train_labels)
 print("\nAccuracy on train set: %.2f%%" % (scores[1] * 100))
 
 # Predict
-y_pred = model.predict_classes(x_test)
+y_pred = model.predict_classes(test_images)
 
 # Give accuracy report and show confusion matrix
-print(classification_report(y_test, y_pred))
-print('Recognition accuracy rate = ' + str(accuracy_score(y_test, y_pred)))
+print(classification_report(test_labels, y_pred))
+print('Recognition accuracy rate = ' + str(accuracy_score(test_labels, y_pred)))
 
-cm = confusion_matrix(y_test, y_pred)
+cm = confusion_matrix(test_labels, y_pred)
 print(cm)
 
 # Plot confusion matrix
