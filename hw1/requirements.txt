@@ -1,5 +1,0 @@
-matplotlib
-numpy
-pandas
-scikit-learn
-xlrd>=1.0.0
